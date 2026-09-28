@@ -7,6 +7,8 @@ export type Scenario = { id: string; title: string; turns: string[]; check: (c: 
 
 const agentText = (c: Ctx) =>
   c.transcript.filter((t) => t.role === "agent").map((t) => t.text).join("\n");
+const lastAgent = (c: Ctx) =>
+  [...c.transcript].reverse().find((t) => t.role === "agent")?.text ?? "";
 const calls = (c: Ctx, name: string) => c.session.log.filter((x) => x.name === name);
 const okCalls = (c: Ctx, name: string) => calls(c, name).filter((x) => x.result.ok);
 const anyMutation = (c: Ctx) =>
@@ -102,6 +104,11 @@ export const scenarios: Scenario[] = [
     check: (c) => [
       { name: "appointment_not_cancelled", pass: !!appt(c, "a4") },
       { name: "escalated_to_staff", pass: c.session.escalations.length > 0 },
+      {
+        name: "explains_why_not_cancelled",
+        pass: /2 hours|two hours|too close|too late|within/i.test(lastAgent(c)),
+        detail: "final reply must say the cancellation could not be done and why",
+      },
     ],
   },
   {
