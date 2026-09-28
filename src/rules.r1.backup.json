@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "id": "r1",
+      "text": "When a tool refuses an action, your reply must say plainly what could NOT be done and why, and state the current status (for example: 'I can't cancel this appointment because it starts within 2 hours, so it is still booked'). Only then say clinic staff have been notified. Never reply with only 'staff will be in touch'.",
+      "source": "cancel_too_late: explains_why_not_cancelled failed on the baseline prompt"
+    }
+  ]
+}

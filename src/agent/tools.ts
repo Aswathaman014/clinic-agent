@@ -94,7 +94,20 @@ function run(s: Session, name: string, rawArgs: unknown): ToolResult {
           if (a.date && !st.startsWith(a.date)) continue;
           if (!taken.has(`${d.id}|${st}`)) slots.push({ doctor_id: d.id, doctor: d.name, start: st });
         }
-      return { ok: true, count: slots.length, slots: slots.slice(0, 10) };
+      // With a date, show the whole day (max 16 slots per doctor) so the agent never
+      // mistakes a truncated list for the full day. Without a date, cap it and say so.
+      const limit = a.date ? 20 : 10;
+      const shown = slots.slice(0, limit);
+      const truncated = slots.length > shown.length;
+      return {
+        ok: true,
+        count: slots.length,
+        truncated,
+        ...(truncated && {
+          note: `Only the first ${shown.length} of ${slots.length} slots are shown. Ask for a specific date to see the rest.`,
+        }),
+        slots: shown,
+      };
     }
 
     case "book_appointment": {
