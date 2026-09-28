@@ -1,0 +1,24 @@
+{
+  "name": "clinic-agent",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "chat": "tsx src/agent/cli.ts",
+    "eval": "tsx src/eval/loop.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
+    "@google/genai": "^2.24.0",
+    "dotenv": "^18.0.4",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.3",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}
