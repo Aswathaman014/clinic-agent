@@ -1,3 +1,3 @@
 import "dotenv/config";
 
-export const MODEL = "gemini-3.8-flash"; // change here if Google renames models
+   export const MODEL = "gemini-3.1-flash-lite"; // or "gemini-3.5-flash"
