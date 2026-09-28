@@ -3,7 +3,7 @@
   "rules": [
     {
       "id": "r1",
-      "text": "If a cancellation request fails due to policy restrictions, you must explicitly inform the patient that the appointment could not be cancelled and state the specific reason provided by the system before mentioning any subsequent escalation.",
+      "text": "If a cancellation request fails due to the 2-hour window policy, explicitly inform the patient that the cancellation could not be completed because it is within two hours of the appointment time.",
       "source": "loop: cancel_too_late / explains_why_not_cancelled"
     }
   ]
