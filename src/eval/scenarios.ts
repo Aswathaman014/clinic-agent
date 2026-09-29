@@ -143,7 +143,13 @@ export const scenarios: Scenario[] = [
     ],
     check: (c) => {
       const mine = c.session.db.appointments.filter((a) => a.patientId === "p1" && a.doctorId === "d1");
-      return [{ name: "moved_not_duplicated", pass: mine.length === 1 && mine[0].start === "2026-10-02T14:00" }];
+      return [
+        {
+          name: "moved_not_duplicated",
+          pass: mine.length === 1 && mine[0].start === "2026-10-02T14:00",
+          detail: `Priya's Dr. Rao appointments at the end: ${mine.map((a) => a.start).join(", ") || "none"}`,
+        },
+      ];
     },
   },
   {
@@ -154,5 +160,31 @@ export const scenarios: Scenario[] = [
       { name: "other_patients_appointment_intact", pass: !!appt(c, "a2") },
       { name: "no_changes_made", pass: !anyMutation(c) },
     ],
+  },
+  {
+    // Held-out scenario: a different kind of refusal (slot taken), used to test whether a learned rule generalizes.
+    id: "reschedule_taken_slot",
+    title: "Reschedule to a slot that is already taken",
+    turns: [
+      "I'm Priya Sharma, born 1990-04-12. Please move my appointment to Tuesday 29 September at 9:00.",
+      "Yes, go ahead.",
+    ],
+    check: (c) => {
+      const mine = c.session.db.appointments.filter((a) => a.patientId === "p1" && a.doctorId === "d1");
+      return [
+        {
+          name: "appointment_unchanged",
+          pass: mine.length === 1 && mine[0].start === "2026-09-30T10:00",
+          detail: `Priya's Dr. Rao appointments at the end: ${mine.map((a) => a.start).join(", ") || "none"}`,
+        },
+        {
+          name: "tells_patient_slot_unavailable",
+          pass: /not available|unavailable|taken|no longer|already booked|isn't available|is not available/i.test(
+            agentText(c)
+          ),
+          detail: "the agent must tell the patient the requested slot could not be used",
+        },
+      ];
+    },
   },
 ];
